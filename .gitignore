@@ -1,0 +1,46 @@
+# ----------------------------
+# Python artifacts
+# ----------------------------
+__pycache__/
+*.py[cod]       # Compiled bytecode
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables
+.env
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# ----------------------------
+# Playwright artifacts
+# ----------------------------
+playwright-report/   # HTML report from Playwright test runs
+test-results/        # Raw test results (screenshots, videos)
+blob-report/         # Data for GitHub reporting integrations
+trace.zip            # Playwright trace export (binary file)
+
+# ----------------------------
+# SQLite database
+# ----------------------------
+data/test_app.db     # Ignore if generated dynamically
+
+# ----------------------------
+# OS-specific files
+# ----------------------------
+.DS_Store            # macOS folder settings cache
+Thumbs.db            # Windows Explorer thumbnail cache
+
+# ----------------------------
+# IDE / Editor settings
+# ----------------------------
+.vscode/
