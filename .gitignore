@@ -1,16 +1,38 @@
-# ----------------------------
-# Python artifacts
-# ----------------------------
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]       # Compiled bytecode
-.Python
-.venv/
-venv/
-ENV/
-env/
+*.py[cod]
+*$py.class
 
-# Environment variables
-.env
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 htmlcov/
@@ -19,28 +41,36 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
 .pytest_cache/
 
-# ----------------------------
-# Playwright artifacts
-# ----------------------------
-playwright-report/   # HTML report from Playwright test runs
-test-results/        # Raw test results (screenshots, videos)
-blob-report/         # Data for GitHub reporting integrations
-trace.zip            # Playwright trace export (binary file)
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# ----------------------------
-# SQLite database
-# ----------------------------
-data/test_app.db     # Ignore if generated dynamically
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
-# ----------------------------
-# OS-specific files
-# ----------------------------
-.DS_Store            # macOS folder settings cache
-Thumbs.db            # Windows Explorer thumbnail cache
-
-# ----------------------------
-# IDE / Editor settings
-# ----------------------------
+# IDE settings
 .vscode/
+.idea/
+
+# SQLite database files (ignore all but .gitkeep)
+data/*
+!data/.gitkeep
+
+# Playwright artifacts
+playwright-report/
+test-results/
+blob-report/
+.trace/
+.traces/
