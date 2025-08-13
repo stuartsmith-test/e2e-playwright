@@ -1,3 +1,5 @@
+[![Playwright Tests](https://github.com/stuartsmith-test/e2e-playwright/actions/workflows/python-playwright.yml/badge.svg)](https://github.com/stuartsmith-test/e2e-playwright/actions/workflows/python-playwright.yml)
+
 # E2E Automation Practice with Playwright and Python
 
 > **Note**  

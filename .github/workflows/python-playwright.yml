@@ -1,0 +1,87 @@
+name: Playwright Tests
+
+on:
+  workflow_dispatch: {}        # allow manual runs from Actions tab
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      # Fork of the LinkedIn Learning sample app
+      APP_REPO: https://github.com/stuartsmith-test/test-automation-foundations-728391.git
+      APP_DIR: app-under-test
+      PORT: 3000
+      # Used by utils/dbHelpers.py to locate the app's SQLite DB
+      DB_PATH: ${{ github.workspace }}/app-under-test/shop.db
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python deps + Playwright
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python -m playwright install --with-deps
+
+      - name: Set up Node.js (for app under test)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Clone sample app
+        run: git clone "$APP_REPO" "$APP_DIR"
+
+      - name: Install and start app
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          npm ci || npm install
+          nohup npm start >/dev/null 2>&1 &
+          echo $! > ../server.pid
+
+      - name: Wait for app
+        run: |
+          for i in {1..60}; do
+            if curl -sSf "http://localhost:${PORT}/" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "App did not start in time" >&2
+          exit 1
+
+      - name: Run tests
+        env:
+          PYTEST_BASE_URL: http://localhost:${{ env.PORT }}
+          BASE_URL: http://localhost:${{ env.PORT }}
+        run: pytest -q
+
+      - name: Upload test artifacts (if any)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            test-results/**
+            playwright-report/**
+          if-no-files-found: ignore
+
+      - name: Stop app
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill "$(cat server.pid)" || true
+          fi
