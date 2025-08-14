@@ -1,7 +1,7 @@
 name: Playwright Tests
 
 on:
-  workflow_dispatch: {}        # allow manual runs from Actions tab
+  workflow_dispatch: {}        # Allow manual runs from Actions tab
   push:
     branches: [main]
   pull_request:
@@ -13,16 +13,17 @@ jobs:
     timeout-minutes: 20
 
     env:
-      # Fork of the LinkedIn Learning sample app
       APP_REPO: https://github.com/stuartsmith-test/test-automation-foundations-728391.git
       APP_DIR: app-under-test
       PORT: 3000
-      # Used by utils/dbHelpers.py to locate the app's SQLite DB
       DB_PATH: ${{ github.workspace }}/app-under-test/shop.db
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
+      - name: Clone sample app
+        run: git clone "$APP_REPO" "$APP_DIR"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -40,11 +41,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          # Cache npm deps for the app-under-test
           cache: 'npm'
           cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
-
-      - name: Clone sample app
-        run: git clone "$APP_REPO" "$APP_DIR"
 
       - name: Install and start app
         working-directory: ${{ env.APP_DIR }}
