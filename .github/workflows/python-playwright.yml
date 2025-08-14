@@ -41,6 +41,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
 
       - name: Clone sample app
         run: git clone "$APP_REPO" "$APP_DIR"
