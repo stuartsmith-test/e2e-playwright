@@ -13,30 +13,45 @@ It covers file structure, fixtures, helpers, and useful commands for API and UI 
 4. [Helpers](#helpers)
 5. [Running Tests](#running-tests)
 6. [Headless vs. Headed Mode](#headless-vs-headed-mode)
-7. [Common Gotchas](#common-gotchas)
+7. [Continuous Integration (CI)](#continuous-integration-ci)
+8. [Common Gotchas](#common-gotchas)
 
 ---
 
 ## Project Structure
 ```text
 e2e-playwright/
-├── conftest.py # Shared fixtures (e.g., api_request_context)
-├── pytest.ini # Pytest configuration (e.g., base_url)
-├── utils/ # Reusable helper functions
-│ ├── api_helpers.py # API helper functions
-│ ├── dbHelpers.py # Database helper functions
-│ └── ui_helpers.py # UI helper functions
-├── tests/
-│ ├── api/
-│ │ ├── init.py
-│ │ └── test_add_to_cart.py # Example API test
-│ ├── db/
-│ │ ├── init.py
-│ │ └── test_db_connection.py # Database connection test
-│ └── ui/
-│ ├── init.py
-│ └── test_homepage.py # Example UI test
-└── requirements.txt
+├── .github/
+│   └── workflows/
+│       └── python-playwright.yml        # CI: spins up app-under-test and runs pytest
+├── LICENSE                              # MIT License
+├── README.md                            # Project overview + setup + CI badge
+├── TESTING.md                           # Test structure, how to run locally/CI
+├── conftest.py                          # Shared fixtures (e.g., api_request_context)
+├── pytest.ini                           # pytest config (pythonpath, base_url)
+├── requirements.txt                     # Top-level deps for tests
+├── utils/                               # Reusable helpers (shared across tests)
+│   ├── __init__.py
+│   ├── api_helpers.py                   # reset_cart(), add_to_cart(), etc.
+│   ├── dbHelpers.py                     # SQLite helpers (get_cart_quantity, etc.)
+│   └── ui_helpers.py                    # go_home(), expect_text_visible(), etc.
+└── tests/
+    ├── __init__.py
+    ├── api/
+    │   ├── __init__.py
+    │   └── test_add_to_cart.py          # API-only smoke (uses Playwright API client)
+    ├── db/
+    │   ├── __init__.py
+    │   └── test_db_connection.py        # Sanity connection/read test against shop.db
+    ├── e2e/
+    │   ├── __init__.py
+    │   ├── test_cart_db_validation.py   # API → DB: quantity reflects API actions
+    │   └── test_cart_end_to_end.py      # API → DB → UI: /cart shows correct qty
+    └── ui/
+        ├── __init__.py
+        ├── test_homepage.py             # UI smoke: “Koala” visible on home
+        └── test_add_to_cart_network.py  # UI+network: click triggers POST /add-to-cart
+
 ```
 
 ---
@@ -75,6 +90,8 @@ def api_request_context(playwright: Playwright, base_url: str) -> Generator[APIR
 - **Location**: In `conftest.py` so pytest auto-loads it for all tests without an import.
 - **Usage**: Simply declare `api_request_context` as a parameter in a test function.
 
+---
+
 ## Helpers
 
 Helper modules live in `utils/` and contain reusable logic that keeps test files clean.
@@ -96,6 +113,8 @@ def reset_cart(api_request_context: APIRequestContext) -> None:
     response = api_request_context.post("/reset-cart")
     assert response.ok, f"Reset cart failed. Status: {response.status}"
 ```
+---
+
 ## Running Tests
 Run all tests:
 ```bash
@@ -114,7 +133,7 @@ Run a single test function:
 ```bash
 pytest tests/api/test_add_to_cart.py::test_add_to_cart
 ```
-
+---
 ## Headless vs. Headed Mode
 Playwright runs headless (no browser window) by default.
 
@@ -126,6 +145,37 @@ pytest --headed
 ```bash
 pytest --browser chromium --headed
 ```
+**Debug with Playwright Inspector:**
+```bash
+PWDEBUG=1 pytest
+```
+---
+## Continuous Integration (CI)
+
+This repo uses **GitHub Actions** to spin up the app-under-test and run all tests (API, DB, UI) with Playwright/pytest.
+
+**What the workflow does**
+1. Checks out this repo
+2. Clones my fork of the LinkedIn Learning app into `app-under-test/`
+3. Starts the app on `http://localhost:3000`
+4. Sets `DB_PATH` to point to the app’s `shop.db` for DB assertions
+5. Runs all tests (`pytest`) against the live app
+
+**View current build status:** See the [CI badge in README](README.md) for the latest run result.
+
+**Manual run**
+- GitHub → **Actions** → *Playwright Tests* → **Run workflow**.
+
+**Interpreting failures**
+- If “Wait for app” fails, the app didn’t start in time (increase wait loop or inspect app logs).
+- If tests fail, download the **artifacts** from the run for details.  
+  (Optional: enable `--tracing=retain-on-failure` and `--screenshot=only-on-failure` later.)
+
+**Key envs (set by workflow)**
+- `BASE_URL` / `PYTEST_BASE_URL`: `http://localhost:3000`
+- `DB_PATH`: `${{ github.workspace }}/app-under-test/shop.db`
+
+---
 
 ## Common Gotchas
 - **Fixture scope** matters — if you expect fresh state, use `function` scope instead of `session`.
@@ -137,4 +187,4 @@ pytest --browser chromium --headed
 - **Database connections**: Always close them in helpers to avoid locks.
 
 - **Browser cleanup**: pytest-playwright auto-closes browser contexts after each test.
-
+---
