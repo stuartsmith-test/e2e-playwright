@@ -1,30 +1,12 @@
-# Byte-compiled / optimized / DLL files
+# Git ignore rules for Python + Playwright test automation project
+
+# Byte-compiled / optimized files
 __pycache__/
 *.py[cod]
 *$py.class
 
 # C extensions
 *.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 
 # PyInstaller
 *.manifest
@@ -48,7 +30,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
-# Jupyter Notebook
+# Jupyter Notebook checkpoints
 .ipynb_checkpoints
 
 # Environments
@@ -63,10 +45,6 @@ venv.bak/
 # IDE settings
 .vscode/
 .idea/
-
-# SQLite database files (ignore all but .gitkeep)
-data/*
-!data/.gitkeep
 
 # Playwright artifacts
 playwright-report/
