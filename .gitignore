@@ -52,3 +52,11 @@ test-results/
 blob-report/
 .trace/
 .traces/
+
+# Local clone of the sample app (when running "app repo as a sub-folder" setup as in README instructions)
+app-under-test/
+
+# App log file from nohup command (when running in Codespaces)
+app.log
+
+

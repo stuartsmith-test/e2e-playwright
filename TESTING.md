@@ -163,6 +163,11 @@ This repo uses **GitHub Actions** to spin up the app-under-test and run all test
 
 **View current build status:** See the [CI badge in README](README.md) for the latest run result.
 
+> **Note:** In CI (and by default in Codespaces), the sample app is cloned into an
+> `app-under-test/` folder **inside this repo**. Advanced users can clone it as a
+> sibling under `/workspaces/` in Codespaces, but that isn’t required.  
+> The `app-under-test/` folder is ignored by `.gitignore` to avoid accidental commits.
+
 **Manual run**
 - GitHub → **Actions** → *Playwright Tests* → **Run workflow**.
 

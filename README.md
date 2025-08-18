@@ -31,35 +31,66 @@ See [`TESTING.md`](./TESTING.md) for detailed information about running and main
 
 Before running these Playwright + Python tests, make sure you have the necessary tools, libraries, and the sample app running.  
 
-This alignment mirrors the setup from my AI‑assisted automation experiments, so results are consistent across local runs and pipelines.
+This alignment mirrors the structure from my AI‑assisted automation experiments, with one notable exception - during original development, the sample app lived in a sibling folder, but here we clone it as a subfolder for easier setup.
 
+### 1) Prepare Python env + Playwright
+**a. Clone this repo** and set up a virtual environment:
 
-1. **Clone and start the sample app (separate repo)**
    ```bash
-   git clone https://github.com/stuartsmith-test/test-automation-foundations-728391.git
-   cd test-automation-foundations-728391
-   npm install
-   npm start
-   # App runs at http://localhost:3000
-
-   ```
-
-2. **Set up this test project (Python venv + deps)**  
-   In a new terminal, return to the test repo and activate the virtual environment:
-   ```bash
-   cd ~/Projects/e2e-playwright
-   python -m venv venv
-   # Activate the venv
+ git clone https://github.com/YOURNAME/e2e-playwright.git
+ cd e2e-playwright
+ python -m venv venv
+    # Activate the venv
    # Git Bash:
-   source venv/Scripts/activate  
+   source venv/Scripts/activate 
+
+   # Linux / macOS / Codespaces
+   # source venv/bin/activate
+ 
    # PowerShell:
    # .\venv\Scripts\Activate.ps1
-
-   pip install -r requirements.txt
-   python -m playwright install
    ```
+**b. Install Python deps:**
+```bash
+pip install -r requirements.txt
+```
+**c. Install Playwright + system deps:**
+```bash
+python -m playwright install
+```
+- **Codespaces only:** also run
+```bash
+sudo npx playwright install-deps chromium
+```
+*(You may see a prompt “Ok to proceed? (y)” — answer y.)*
 
-3. **Run a test**  
+### 2) Prepare the sample app (app-under-test)
+
+**a. Clone the app** inside this repo under `app-under-test/:` 
+   
+   ```bash
+   git clone https://github.com/stuartsmith-test/test-automation-foundations-728391.git app-under-test
+   cd app-under-test
+   npm ci
+   ```
+>**Tip:** `app-under-test/` is used inside this repo to mirror CI workflow.
+>That folder is ignored by `.gitignore` to avoid accidental commits.
+
+**b. Start the app in background (freeing your prompt):**
+```bash
+nohup npm start > ../app.log 2>&1 &
+cd ..
+```
+- The app runs on `http://localhost:3000`
+- Logs are written to `app.log`
+
+**c. Set DB_PATH for tests** (required, because some tests query the DB directly):
+```bash
+   export DB_PATH=$PWD/app-under-test/shop.db
+```
+*(Windows PowerShell: `setx DB_PATH "%cd%\app-under-test\shop.db"`)
+
+### 3) Run a test  
    Still in the venv:
    - UI smoke test
    ```bash
