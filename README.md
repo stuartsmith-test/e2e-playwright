@@ -4,9 +4,9 @@
 
 This repository is part of a personal initiative to explore popular test automation frameworks, using AI to accelerate learning and experimentation.
 
-Rather than showcasing deep coding expertise, the aim is to understand how modern QA practices can be enriched through AI‑assisted development. Most code structure and syntax were produced with AI support to enable rapid prototyping of real‑world end‑to‑end scenarios.
+Rather than showcasing deep coding expertise, the aim is to understand how modern QA practices — from framework design to test authoring — can be enriched through AI‑assisted development.  Most code structure and syntax were produced with AI support to enable rapid prototyping of real‑world end‑to‑end scenarios.
 
-These tests are intentionally lightweight — designed for exploration, not production use. The chosen test application provides a complete UI/API/DB flow, enabling full‑stack validation without the need to build a custom SUT.<br><br>   
+These examples are intentionally lightweight and designed for exploration, not production use.  The chosen test application provides a complete UI/API/DB flow, enabling full‑stack validation without the need to build a custom SUT.<br><br>   
 
 > **Note**  
 > This test project targets my fork of the [LinkedIn Learning Test Automation Foundations app](https://github.com/stuartsmith-test/test-automation-foundations-728391), which serves as the system under test for API → DB → UI flows.
