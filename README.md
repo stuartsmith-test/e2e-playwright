@@ -33,11 +33,21 @@ Before running these Playwright + Python tests, make sure you have the necessary
 
 This alignment mirrors the structure from my AI‑assisted automation experiments, with one notable exception - during original development, the sample app lived in a sibling folder, but here we clone it as a subfolder for easier setup.
 
+### 0) Install Node.js
+The sample app requires Node.js (v16+ recommended). Installing Node.js also installs npm, which is used to run the app.  
+- [Download Node.js](https://nodejs.org/) or install via a version manager like [nvm](https://github.com/nvm-sh/nvm).  
+
+Verify installation:
+```bash
+node -v
+npm -v
+```
+
 ### 1) Prepare Python env + Playwright
 **a. Clone this repo** and set up a virtual environment:
 
    ```bash
- git clone https://github.com/YOURNAME/e2e-playwright.git
+ git clone https://github.com/stuartsmith-test/e2e-playwright.git
  cd e2e-playwright
  python -m venv venv
     # Activate the venv
@@ -49,6 +59,9 @@ This alignment mirrors the structure from my AI‑assisted automation experiment
  
    # PowerShell:
    # .\venv\Scripts\Activate.ps1
+      # note: If system script execution policy is set to "strict" (default on most systems), run the
+      # following command in an administrator PowerShell session to allow the execution of custom scripts: 
+      # ‘Set-ExecutionPolicy RemoteSigned’ 
    ```
 **b. Install Python deps:**
 ```bash
