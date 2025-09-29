@@ -1,5 +1,24 @@
 # utils/api_helpers.py
-"""Helpers for interacting with cart-related API endpoints in Playwright tests."""
+"""Helpers for interacting with cart-related API endpoints in Playwright tests.
+
+These helpers accept Playwright's `APIRequestContext`, which is the same type used to
+perform HTTP requests in tests. There are two typical ways you will obtain an
+`APIRequestContext`:
+
+1. API tests: use the `api_request_context` fixture provided by the Playwright
+   test runner. Example:
+
+       reset_cart(api_request_context)
+
+2. UI tests: access the request context off a `Page` instance via `page.request`.
+   Example:
+
+       reset_cart(page.request)
+
+Both values implement the same interface and work identically with these helpers.
+Centralizing common actions here ensures consistent status assertions and request
+shapes across all tests.
+"""
 
 # Third‑party: Playwright types for request + response objects
 from playwright.sync_api import APIRequestContext, APIResponse

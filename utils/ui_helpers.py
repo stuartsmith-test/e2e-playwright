@@ -17,3 +17,8 @@ def go_home(page: Page, base_url: str) -> None:
 def expect_text_visible(page: Page, text: str) -> None:
     """Assert that the given text is visible somewhere on the page."""
     assert page.get_by_text(text).first.is_visible(), f"'{text}' not visible on page"
+
+
+def get_cart_count(page: Page) -> int:
+    """Return the numeric cart count displayed in the header."""
+    return int(page.locator("#cart-link span").inner_text().strip())
