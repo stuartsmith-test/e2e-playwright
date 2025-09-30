@@ -192,7 +192,7 @@ This project is integrated with [Qase TestOps](https://qase.io) to record automa
 
 Below is a screenshot of a Qase run summary created from CI:
 
-<img src="docs/qase_run_example.png" alt="Qase Run Example" width="800">
+<img src="docs/Qase_Run_Example.png" alt="Qase Run Example" width="800">
 
 In a real project, Qase provides full details for each run (test titles, execution history, assignments, etc.). 
 This screenshot is included here only to illustrate how results are published — no Qase setup is required 
