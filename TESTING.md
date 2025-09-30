@@ -180,6 +180,24 @@ This repo uses **GitHub Actions** to spin up the app-under-test and run all test
 - `BASE_URL` / `PYTEST_BASE_URL`: `http://localhost:3000`
 - `DB_PATH`: `${{ github.workspace }}/app-under-test/shop.db`
 
+## Qase Integration
+
+This project is integrated with [Qase TestOps](https://qase.io) to record automated test results.
+
+- Each GitHub Actions run automatically creates a test run in Qase.
+- Test cases are auto-created on the first run and updated with pass/fail status on later runs.
+- Results are grouped under the project’s suites (`api`, `db`, `ui`, `e2e`) to match the repo structure.
+
+### Example
+
+Below is a screenshot of a Qase run summary created from CI:
+
+<img src="docs/qase_run_example.png" alt="Qase Run Example" width="800">
+
+In a real project, Qase provides full details for each run (test titles, execution history, assignments, etc.). 
+This screenshot is included here only to illustrate how results are published — no Qase setup is required 
+to explore the tests in this repo.
+
 ---
 
 ## Common Gotchas
