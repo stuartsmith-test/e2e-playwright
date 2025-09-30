@@ -17,7 +17,7 @@ jobs:
       APP_DIR: app-under-test
       PORT: 3000
       DB_PATH: ${{ github.workspace }}/app-under-test/shop.db
-
+   
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -63,10 +63,11 @@ jobs:
           echo "App did not start in time" >&2
           exit 1
 
-      - name: Run tests
+      - name: Run tests with Qase reporting
         env:
           PYTEST_BASE_URL: http://localhost:${{ env.PORT }}
           BASE_URL: http://localhost:${{ env.PORT }}
+          QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
         run: pytest -q
 
       - name: Upload test artifacts (if any)

@@ -1,0 +1,15 @@
+{
+    "mode": "testops",
+    "fallback": "report",
+    "testops": {
+      "api": { "token": "${QASE_TESTOPS_API_TOKEN}" },
+      "project": "E2EPL",
+      "run": {
+        "title": "CI: e2e-playwright",
+        "description": "GitHub Actions run for API/DB/UI/E2E",
+        "complete": true
+      }
+    },
+    "environment": "ci"
+  }
+  
