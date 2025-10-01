@@ -22,3 +22,9 @@ def expect_text_visible(page: Page, text: str) -> None:
 def get_cart_count(page: Page) -> int:
     """Return the numeric cart count displayed in the header."""
     return int(page.locator("#cart-link span").inner_text().strip())
+
+def expect_cart_count(page: Page, expected: int) -> None:
+    """Assert the cart badge shows the expected count."""
+    assert get_cart_count(page) == expected, (
+        f"Expected cart count {expected}, got {get_cart_count(page)}"
+    )

@@ -16,9 +16,13 @@ every test.
 """
 
 from playwright.sync_api import Page, expect
-from utils.ui_helpers import go_home, expect_text_visible, get_cart_count
 from utils.api_helpers import reset_cart
-
+from utils.ui_helpers import (
+    go_home,
+    expect_text_visible,
+    get_cart_count,
+    expect_cart_count,
+)
 
 def test_add_to_cart_shows_message_and_updates_cart_count(page: Page, base_url: str) -> None:
     """After adding an item, success notification appears and cart count increments by 1."""
@@ -28,14 +32,13 @@ def test_add_to_cart_shows_message_and_updates_cart_count(page: Page, base_url: 
 
     initial_count = get_cart_count(page)
 
-    # Act: add the first item (form submit triggers a redirect to /?message=...)
-    with page.expect_navigation():
-        page.click("#add-to-cart-1")
+    # Act: add the first item via its form button (Playwright auto-waits for navigation)
+    item_form = page.locator('form:has(input[name="itemId"][value="1"])')
+    item_form.get_by_role("button").click()
 
     # Assert: success message and incremented count
     expect_text_visible(page, "Item successfully added to cart")
-    expect(page.locator("#cart-link span")).to_have_text(str(initial_count + 1))
-
+    expect_cart_count(page, initial_count + 1)
 
 def test_add_button_disables_at_max_quantity(page: Page, base_url: str) -> None:
     """Button disables and max-quantity message appears after reaching quantity 10."""
@@ -43,15 +46,16 @@ def test_add_button_disables_at_max_quantity(page: Page, base_url: str) -> None:
     reset_cart(page.request)
     go_home(page, base_url)
 
-    add_btn = page.locator("#add-to-cart-1")
+    item_form = page.locator('form:has(input[name="itemId"][value="1"])')
+    add_btn = item_form.get_by_role("button")
 
     # Act: click until the item reaches the maximum (10); each submit redirects
     for _ in range(10):
-        with page.expect_navigation():
-            add_btn.click()
+        add_btn.click()
 
     # Assert: button disabled and max message visible
     expect(add_btn).to_be_disabled()
-    expect(page.get_by_text("Maximum quantity reached").first).to_be_visible()
+    expect_text_visible(page, "Maximum quantity reached")
+
 
 
