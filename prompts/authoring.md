@@ -1,3 +1,9 @@
+<!--
+This file defines house rules for AI-assisted test generation.
+Cursor or other AI tools read this to know how to structure tests.
+Humans: edit here to change conventions (selectors, fixtures, assertions).
+-->
+
 # Test Authoring Rules (Playwright + pytest, Python)
 
 ## Fixtures & State

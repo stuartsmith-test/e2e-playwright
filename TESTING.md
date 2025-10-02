@@ -11,10 +11,12 @@ It covers file structure, fixtures, helpers, and useful commands for API and UI 
 2. [How Test Discovery Works](#how-test-discovery-works)
 3. [Fixtures](#fixtures)
 4. [Helpers](#helpers)
-5. [Running Tests](#running-tests)
-6. [Headless vs. Headed Mode](#headless-vs-headed-mode)
-7. [Continuous Integration (CI)](#continuous-integration-ci)
-8. [Common Gotchas](#common-gotchas)
+5. [AI-Assisted Test Generation](#ai-assisted-test-generation)
+6. [Running Tests](#running-tests)
+7. [Headless vs. Headed Mode](#headless-vs-headed-mode)
+8. [Continuous Integration (CI)](#continuous-integration-ci)
+9. [Qase Integration](#qase-integration)
+10. [Common Gotchas](#common-gotchas)
 
 ---
 
@@ -24,11 +26,19 @@ e2e-playwright/
 ├── .github/
 │   └── workflows/
 │       └── python-playwright.yml        # CI: spins up app-under-test and runs pytest
-├── LICENSE                              # MIT License
+├── LICENSE                              # MIT License 
 ├── README.md                            # Project overview + setup + CI badge
 ├── TESTING.md                           # Test structure, how to run locally/CI
 ├── conftest.py                          # Shared fixtures (e.g., api_request_context)
 ├── pytest.ini                           # pytest config (pythonpath, base_url)
+├── qase.config.json                     # Qase project/config settings
+├── docs/                                # Project docs (e.g., Qase run screenshots)
+│   └── Qase_Run_Example.png
+├── build/                               # Qase reporting output (ignored in git)
+├── prompts/                             # AI authoring rules for test generation
+│   └── authoring.md
+├── requirements/                        # Plain-text user requirements for AI-generated tests
+│   └── add_to_cart.md
 ├── requirements.txt                     # Top-level deps for tests
 ├── utils/                               # Reusable helpers (shared across tests)
 │   ├── __init__.py
@@ -49,8 +59,9 @@ e2e-playwright/
     │   └── test_cart_end_to_end.py      # API → DB → UI: /cart shows correct qty
     └── ui/
         ├── __init__.py
-        ├── test_homepage.py             # UI smoke: “Koala” visible on home
-        └── test_add_to_cart_network.py  # UI+network: click triggers POST /add-to-cart
+        ├── test_homepage.py             # UI smoke
+        ├── test_homepage_cart.py
+        └── test_add_to_cart_req.py      # AI-generated from requirements/add_to_cart.md
 
 ```
 
@@ -113,6 +124,21 @@ def reset_cart(api_request_context: APIRequestContext) -> None:
     response = api_request_context.post("/reset-cart")
     assert response.ok, f"Reset cart failed. Status: {response.status}"
 ```
+## AI-Assisted Test Generation
+
+All tests in this repo were generated with AI tools:
+
+- Early tests: created through AI-assisted sessions outside the repo.
+- Later tests: generated or refactored in-repo using Cursor and GitHub Copilot.
+
+Some tests are generated directly from plain-text requirements under `requirements/`, guided by `prompts/authoring.md`.
+
+**Example:**
+- Requirement → `requirements/add_to_cart.md`
+- Generated test → `tests/ui/test_add_to_cart_req.py`
+
+For an overview, see the [AI-Assisted QA section in README](./README.md#ai-assisted-qa), which highlights the requirement-to-test generation workflow.
+
 ---
 
 ## Running Tests
@@ -187,6 +213,9 @@ This project is integrated with [Qase TestOps](https://qase.io) to record automa
 - Each GitHub Actions run automatically creates a test run in Qase.
 - Test cases are auto-created on the first run and updated with pass/fail status on later runs.
 - Results are grouped under the project’s suites (`api`, `db`, `ui`, `e2e`) to match the repo structure.
+- Qase integration is configured via `qase.config.json`.
+- Local/CI run outputs are written to `build/` (not versioned; see `.gitignore`).
+- Example run screenshot: `docs/Qase_Run_Example.png`
 
 ### Example
 

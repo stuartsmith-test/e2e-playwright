@@ -21,9 +21,10 @@ See [`TESTING.md`](./TESTING.md) for detailed information about running and main
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
 2. [Repo Structure](#repo-structure)
-3. [How CI Runs](#how-ci-runs)
-4. [Notes](#notes)
-5. [License](#license)
+3. [AI-Assisted QA](#ai-assisted-qa)
+4. [How CI Runs](#how-ci-runs)
+5. [Notes](#notes)
+6. [License](#license)
 
 ---
 
@@ -135,6 +136,14 @@ e2e-playwright/
 ├── TESTING.md                           # Test structure, how to run locally/CI
 ├── conftest.py                          # Shared fixtures (e.g., api_request_context)
 ├── pytest.ini                           # pytest config (pythonpath, base_url)
+├── qase.config.json                     # Qase project/config settings
+├── docs/                                # Project docs (e.g., Qase run screenshots)
+│   └── Qase_Run_Example.png
+├── build/                               # Qase reporting output (ignored in git)
+├── prompts/                             # AI authoring rules for test generation
+│   └── authoring.md
+├── requirements/                        # Plain-text user requirements for AI-generated tests
+│   └── add_to_cart.md
 ├── requirements.txt                     # Top-level deps for tests
 ├── utils/                               # Reusable helpers (shared across tests)
 │   ├── __init__.py
@@ -155,12 +164,25 @@ e2e-playwright/
     │   └── test_cart_end_to_end.py      # API → DB → UI: /cart shows correct qty
     └── ui/
         ├── __init__.py
-        ├── test_homepage.py             # UI smoke: “Koala” visible on home
-        └── test_add_to_cart_network.py  # UI+network: click triggers POST /add-to-cart
+        ├── test_homepage.py             # UI smoke
+        ├── test_homepage_cart.py
+        └── test_add_to_cart_req.py      # AI-generated from requirements/add_to_cart.md
 
 ```
+---
+## AI-Assisted QA
+All tests in this repo were generated with AI tools. Early test cases were produced through AI-assisted sessions, while more recent ones were generated or refactored directly in the repo using Cursor and GitHub Copilot.
+
+The repo also highlights **examples of full tests generated directly from plain-text requirements using Cursor**:
+
+- Requirement file: `requirements/add_to_cart.md`
+- Generated test: `tests/ui/test_add_to_cart_req.py`
+- Commit message: `experimenting with Cursor: generated UI test from requirements/add_to_cart.md`
+
+AI generation is guided by house rules in `prompts/authoring.md`.
 
 ---
+
 ## How CI runs
 
 This section shows how the suite ties into automated pipelines for continuous validation, using GitHub Actions to spin up the sample app, then run Playwright/pytest against it. 
