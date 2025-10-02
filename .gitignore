@@ -59,4 +59,8 @@ app-under-test/
 # App log file from nohup command (when running in Codespaces)
 app.log
 
+# Qase output
+/build/
+
+
 
